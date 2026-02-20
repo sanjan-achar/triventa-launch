@@ -1,27 +1,7 @@
-import { useEffect } from 'react'
+import { useRef } from 'react'
 
 export default function About() {
-  useEffect(() => {
-    const stats = document.querySelectorAll('.stat')
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = '1'
-          entry.target.style.transform = 'translateY(0)'
-          observer.unobserve(entry.target)
-        }
-      })
-    }, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' })
-
-    stats.forEach(stat => {
-      stat.style.opacity = '0'
-      stat.style.transform = 'translateY(20px)'
-      stat.style.transition = 'opacity 0.6s ease, transform 0.6s ease'
-      observer.observe(stat)
-    })
-
-    return () => observer.disconnect()
-  }, [])
+  const statsContainerRef = useRef(null)
 
   return (
     <section id="about" className="about about-full">
@@ -37,18 +17,18 @@ export default function About() {
           <div className="about-text">
             <p>Triventa Exports is your trusted partner for authentic, high-quality coffee beans sourced directly from the lush plantations of Karnataka, India. We believe in building bridges between premium coffee producers and global markets, ensuring ethical practices and sustainable growth.</p>
             <p>Our mission is to bring the rich flavor and heritage of Karnataka's coffee to coffee lovers around the world, while supporting local farmers and promoting sustainable agriculture.</p>
-            <div className="about-stats">
-              <div className="stat">
-                <h3 style={{ color: '#8C1D2F' }}>500+</h3>
-                <p style={{ color: '#8C1D2F' }}>Farmer Partners</p>
+            <div className="about-stats" ref={statsContainerRef}>
+              <div className="about-stat-card">
+                <h3>500+</h3>
+                <p>Farmer Partners</p>
               </div>
-              <div className="stat">
-                <h3 style={{ color: '#8C1D2F' }}>40+</h3>
-                <p style={{ color: '#8C1D2F' }}>Countries Served</p>
+              <div className="about-stat-card">
+                <h3>40+</h3>
+                <p>Countries Served</p>
               </div>
-              <div className="stat">
-                <h3 style={{ color: '#8C1D2F' }}>100%</h3>
-                <p style={{ color: '#8C1D2F' }}>Quality Assured</p>
+              <div className="about-stat-card">
+                <h3>100%</h3>
+                <p>Quality Assured</p>
               </div>
             </div>
           </div>

@@ -1,6 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function Products() {
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const productCount = 3
+  const productsContainerRef = useRef(null)
+
   useEffect(() => {
     const cards = document.querySelectorAll('.product-card')
     const observer = new IntersectionObserver((entries) => {
@@ -23,11 +27,26 @@ export default function Products() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const container = productsContainerRef.current
+    if (!container) return
+
+    const handleScroll = () => {
+      const scrollLeft = container.scrollLeft
+      const scrollWidth = container.scrollWidth - container.clientWidth
+      const progress = scrollWidth > 0 ? Math.round((scrollLeft / scrollWidth) * (productCount - 1)) : 0
+      setScrollProgress(progress)
+    }
+
+    container.addEventListener('scroll', handleScroll)
+    return () => container.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <section id="products" className="products">
       <div className="container">
         <h2>Our Premium Coffee Beans</h2>
-        <div className="products-grid">
+        <div className="products-grid" ref={productsContainerRef}>
           <div className="product-card">
             <div className="product-icon">
               <i className="fas fa-seedling"></i>
@@ -52,6 +71,26 @@ export default function Products() {
             <p>Expertly crafted blends combining the best of our arabica and robusta beans for unique taste experiences.</p>
             <span className="product-tag">Exclusive</span>
           </div>
+        </div>
+        <div className="scroll-dots-container">
+          {Array.from({ length: productCount }).map((_, index) => (
+            <button
+              key={index}
+              className={`scroll-dot ${scrollProgress === index ? 'active' : ''}`}
+              onClick={() => {
+                const container = productsContainerRef.current
+                if (container) {
+                  const targetCard = container.querySelectorAll('.product-card')[index]
+                  if (!targetCard) return
+                  container.scrollTo({
+                    left: targetCard.offsetLeft,
+                    behavior: 'smooth'
+                  })
+                }
+              }}
+              aria-label={`Go to card ${index + 1}`}
+            />
+          ))}
         </div>
       </div>
     </section>

@@ -28,7 +28,9 @@ export default function Contact() {
       <div className="container">
         <h2>Get in Touch</h2>
         <div className="contact-content">
-          <div className="contact-info">
+          <div className="contact-card contact-info-card">
+            <h3>Contact Information</h3>
+            <div className="contact-info">
             <div className="info-item">
               <i className="fas fa-map-marker-alt"></i>
               <div>
@@ -58,7 +60,10 @@ export default function Contact() {
               </div>
             </div>
           </div>
-          <form className="contact-form" onSubmit={handleSubmit}>
+          </div>
+          <div className="contact-card contact-form-card">
+            <h3>Send us a Message</h3>
+            <form className="contact-form" onSubmit={handleSubmit}>
             <input 
               type="text" 
               name="name" 
@@ -92,7 +97,8 @@ export default function Contact() {
               required
             ></textarea>
             <button type="submit" className="btn btn-download">Send Message</button>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </section>
