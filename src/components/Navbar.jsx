@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const [activeSection, setActiveSection] = useState('home')
 
   useEffect(() => {
     const prefersDark = localStorage.getItem('theme') === 'dark'
@@ -12,6 +13,27 @@ export default function Navbar() {
     } else {
       document.body.classList.remove('dark-mode')
     }
+  }, [])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['home', 'about', 'products', 'why-us', 'contact']
+      const scrollPosition = window.scrollY + 100
+
+      for (const sectionId of sections) {
+        const element = document.getElementById(sectionId)
+        if (element) {
+          const { offsetTop, offsetHeight } = element
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(sectionId)
+            break
+          }
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const toggleMenu = () => {
@@ -35,6 +57,7 @@ export default function Navbar() {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
       setIsMenuOpen(false)
+      setActiveSection(id)
     }
   }
 
@@ -43,15 +66,14 @@ export default function Navbar() {
       <div className="container">
         <div className="nav-wrapper">
           <div className="logo">
-            <i className="fas fa-leaf"></i>
             <span>Triventa Exports</span>
           </div>
           <ul className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
-            <li><a href="#home" onClick={() => scrollToSection('home')}>Home</a></li>
-            <li><a href="#about" onClick={() => scrollToSection('about')}>About</a></li>
-            <li><a href="#products" onClick={() => scrollToSection('products')}>Products</a></li>
-            <li><a href="#why-us" onClick={() => scrollToSection('why-us')}>Why Us</a></li>
-            <li><a href="#contact" onClick={() => scrollToSection('contact')}>Contact</a></li>
+            <li><a href="#home" className={activeSection === 'home' ? 'active' : ''} onClick={() => scrollToSection('home')}>Home</a></li>
+            <li><a href="#about" className={activeSection === 'about' ? 'active' : ''} onClick={() => scrollToSection('about')}>About</a></li>
+            <li><a href="#products" className={activeSection === 'products' ? 'active' : ''} onClick={() => scrollToSection('products')}>Products</a></li>
+            <li><a href="#why-us" className={activeSection === 'why-us' ? 'active' : ''} onClick={() => scrollToSection('why-us')}>Why Us</a></li>
+            <li><a href="#contact" className={activeSection === 'contact' ? 'active' : ''} onClick={() => scrollToSection('contact')}>Contact</a></li>
           </ul>
 
           <div className="nav-controls">

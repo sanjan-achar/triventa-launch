@@ -6,6 +6,7 @@ import Products from './components/Products'
 import WhyUs from './components/WhyUs'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import Chatbot from './components/Chatbot'
 
 function App() {
   useEffect(() => {
@@ -44,6 +45,7 @@ function App() {
       <WhyUs />
       <Contact />
       <Footer />
+      <Chatbot />
     </>
   )
 }
