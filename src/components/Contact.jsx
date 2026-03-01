@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -8,6 +8,21 @@ export default function Contact() {
     company: '',
     message: ''
   })
+  const [submitStatus, setSubmitStatus] = useState({
+    type: '',
+    message: ''
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showPopup, setShowPopup] = useState(false)
+  const popupTimerRef = useRef(null)
+
+  useEffect(() => {
+    return () => {
+      if (popupTimerRef.current) {
+        window.clearTimeout(popupTimerRef.current)
+      }
+    }
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -19,9 +34,59 @@ export default function Contact() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    alert(`Thank you ${formData.name}! We've received your message and will get back to you at ${formData.email} shortly.`)
-    setFormData({ name: '', email: '', phone: '', company: '', message: '' })
-    console.log(formData)
+
+    const cleanedData = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      company: formData.company.trim(),
+      message: formData.message.trim()
+    }
+
+    if (!cleanedData.name || !cleanedData.email || !cleanedData.phone || !cleanedData.company || !cleanedData.message) {
+      setSubmitStatus({
+        type: 'error',
+        message: 'Please fill all fields before sending your message.'
+      })
+      return
+    }
+
+    setIsSubmitting(true)
+
+    const payload = new URLSearchParams({
+      'form-name': 'contact',
+      ...cleanedData,
+      'bot-field': ''
+    }).toString()
+
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: payload
+    })
+      .then(() => {
+        setSubmitStatus({
+          type: 'success',
+          message: 'Thank you! Your message has been sent successfully.'
+        })
+        setShowPopup(true)
+        if (popupTimerRef.current) {
+          window.clearTimeout(popupTimerRef.current)
+        }
+        popupTimerRef.current = window.setTimeout(() => {
+          setShowPopup(false)
+        }, 3200)
+        setFormData({ name: '', email: '', phone: '', company: '', message: '' })
+      })
+      .catch(() => {
+        setSubmitStatus({
+          type: 'error',
+          message: 'Submission failed. Please try again or email info@triventaexports.com.'
+        })
+      })
+      .finally(() => {
+        setIsSubmitting(false)
+      })
   }
 
   return (
@@ -70,7 +135,16 @@ export default function Contact() {
           </div>
           <div className="contact-card contact-form-card">
             <h3>Send us a Message</h3>
-            <form className="contact-form" onSubmit={handleSubmit}>
+            <form
+              className="contact-form"
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
+              onSubmit={handleSubmit}
+            >
+            <input type="hidden" name="form-name" value="contact" />
+            <input type="hidden" name="bot-field" />
             <input 
               type="text" 
               name="name" 
@@ -93,6 +167,8 @@ export default function Contact() {
               placeholder="Phone Number" 
               value={formData.phone}
               onChange={handleChange}
+              pattern="[0-9+\-\s()]{7,20}"
+              title="Please enter a valid phone number"
               required 
             />
             <input 
@@ -111,11 +187,24 @@ export default function Contact() {
               onChange={handleChange}
               required
             ></textarea>
-            <button type="submit" className="btn btn-download">Send Message</button>
+            <button type="submit" className="btn btn-download" disabled={isSubmitting}>
+              {isSubmitting ? 'Sending...' : 'Send Message'}
+            </button>
+            {submitStatus.message && (
+              <p className={`form-status ${submitStatus.type}`} role="status" aria-live="polite">
+                {submitStatus.message}
+              </p>
+            )}
             </form>
           </div>
         </div>
       </div>
+
+      {showPopup && (
+        <div className="request-popup" role="status" aria-live="polite">
+          Your request has been received.
+        </div>
+      )}
     </section>
   )
 }

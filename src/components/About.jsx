@@ -19,16 +19,16 @@ export default function About() {
             <p>Our mission is to bring the rich flavor and heritage of Karnataka's coffee to coffee lovers around the world, while supporting local farmers and promoting sustainable agriculture.</p>
             <div className="about-stats" ref={statsContainerRef}>
               <div className="about-stat-card">
-                <h3>500+</h3>
-                <p>Farmer Partners</p>
+                <h3>10+</h3>
+                <p>Trusted<br />Suppliers</p>
               </div>
               <div className="about-stat-card">
-                <h3>40+</h3>
-                <p>Countries Served</p>
+                <h3>5+</h3>
+                <p>Global<br />Reach</p>
               </div>
               <div className="about-stat-card">
                 <h3>100%</h3>
-                <p>Quality Assured</p>
+                <p>Assured<br />Standards</p>
               </div>
             </div>
           </div>
