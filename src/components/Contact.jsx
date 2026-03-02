@@ -209,8 +209,8 @@ export default function Contact() {
               <i className="fas fa-id-card"></i>
               <div>
                 <h4>Business IDs</h4>
-                <p>GSTIN: 29ABCDE1234F1Z5</p>
-                <p>CIN: U15490KA2024PTC123456</p>
+                <p>GSTIN: 29AAMCT6839P1Z5</p>
+                <p>CIN: U46209KA2026PTC214010</p>
               </div>
             </div>
           </div>

@@ -36,8 +36,8 @@ export default function Footer() {
               <li><a href="#">Privacy Policy</a></li>
               <li><a href="#">Terms of Service</a></li>
               <li><a href="#">Cookie Policy</a></li>
-              <li>GSTIN: 29ABCDE1234F1Z5</li>
-              <li>CIN: U15490KA2024PTC123456</li>
+              <li>GSTIN: 29AAMCT6839P1Z5</li>
+              <li>CIN: U46209KA2026PTC214010</li>
             </ul>
           </div>
         </div>
