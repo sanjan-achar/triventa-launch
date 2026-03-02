@@ -12,10 +12,10 @@ export default function About() {
       />
       <div className="about-full-overlay"></div>
       <div className="container">
-        <h2>About Triventa Exports</h2>
+        <h2>About <span className="brand-text">Triventa Exports</span></h2>
         <div className="about-content">
           <div className="about-text">
-            <p>Triventa Exports is your trusted partner for authentic, high-quality coffee beans sourced directly from the lush plantations of Karnataka, India. We believe in building bridges between premium coffee producers and global markets, ensuring ethical practices and sustainable growth.</p>
+            <p><span className="brand-text">Triventa Exports</span> is your trusted partner for authentic, high-quality coffee beans sourced directly from the lush plantations of Karnataka, India. We believe in building bridges between premium coffee producers and global markets, ensuring ethical practices and sustainable growth.</p>
             <p>Our mission is to bring the rich flavor and heritage of Karnataka's coffee to coffee lovers around the world, while supporting local farmers and promoting sustainable agriculture.</p>
             <div className="about-stats" ref={statsContainerRef}>
               <div className="about-stat-card">

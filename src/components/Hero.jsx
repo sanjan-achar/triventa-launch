@@ -21,40 +21,54 @@ const getTimeLeft = () => {
 export default function Hero() {
   const [timeLeft, setTimeLeft] = useState(getTimeLeft)
   const [showConfetti, setShowConfetti] = useState(false)
+  const [confettiBurstId, setConfettiBurstId] = useState(0)
   const hasTriggeredConfetti = useRef(false)
+  const confettiTimerRef = useRef(null)
 
   const confettiPieces = useMemo(() => {
-    const palette = ['var(--white)', 'var(--accent-color)', 'var(--primary-color)', 'var(--secondary-color)']
+    const palette = ['#FF4D6D', '#FFD93D', '#6EEB83', '#00C2FF', '#9B5DE5', '#F15BB5', '#FF8C42', '#2EC4B6', '#FFFFFF']
 
-    return Array.from({ length: 80 }, (_, index) => ({
+    return Array.from({ length: 180 }, (_, index) => ({
       id: index,
       left: Math.random() * 100,
-      delay: Math.random() * 0.8,
-      duration: 2.4 + Math.random() * 1.8,
-      drift: -120 + Math.random() * 240,
+      delay: Math.random() * 1,
+      duration: 2.8 + Math.random() * 2.4,
+      drift: -220 + Math.random() * 440,
       color: palette[Math.floor(Math.random() * palette.length)],
       rotate: Math.random() * 360,
     }))
-  }, [])
+  }, [confettiBurstId])
 
   useEffect(() => {
     const timer = window.setInterval(() => {
       setTimeLeft(getTimeLeft())
     }, 1000)
 
-    return () => window.clearInterval(timer)
+    return () => {
+      window.clearInterval(timer)
+      if (confettiTimerRef.current) {
+        window.clearTimeout(confettiTimerRef.current)
+      }
+    }
   }, [])
+
+  const triggerConfetti = () => {
+    setConfettiBurstId((prev) => prev + 1)
+    setShowConfetti(true)
+
+    if (confettiTimerRef.current) {
+      window.clearTimeout(confettiTimerRef.current)
+    }
+
+    confettiTimerRef.current = window.setTimeout(() => {
+      setShowConfetti(false)
+    }, 5200)
+  }
 
   useEffect(() => {
     if (timeLeft.totalMs === 0 && !hasTriggeredConfetti.current) {
       hasTriggeredConfetti.current = true
-      setShowConfetti(true)
-
-      const hideConfetti = window.setTimeout(() => {
-        setShowConfetti(false)
-      }, 4500)
-
-      return () => window.clearTimeout(hideConfetti)
+      triggerConfetti()
     }
   }, [timeLeft.totalMs])
 
@@ -87,11 +101,23 @@ export default function Hero() {
       )}
 
       <div className="hero-content">
-        <h1>Triventa Exports</h1>
+        <h1 className="brand-text">Triventa Exports</h1>
         <p className="tagline">Your Gateway to Global Market</p>
         <p className="hero-subtitle">Premium Coffee Beans Sourced Directly from Karnataka's Finest Farmers</p>
 
-        <div className="event-timer" role="status" aria-live="polite">
+        <div
+          className="event-timer"
+          role="button"
+          tabIndex={0}
+          aria-label="Going live countdown. Click to test confetti"
+          onClick={triggerConfetti}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              triggerConfetti()
+            }
+          }}
+        >
           <p className="timer-label">Going live in</p>
           {timeLeft.totalMs > 0 ? (
             <div className="timer-grid">

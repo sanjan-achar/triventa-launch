@@ -45,7 +45,7 @@ export default function WhyUs() {
   return (
     <section id="why-us" className="why-us">
       <div className="container">
-        <h2>Why Choose Triventa Exports</h2>
+        <h2>Why Choose <span className="brand-text">Triventa Exports</span></h2>
         <div className="features-grid" ref={featuresContainerRef}>
           <div className="feature">
             <div className="feature-icon">
@@ -77,7 +77,7 @@ export default function WhyUs() {
           </div>
           <div className="feature">
             <div className="feature-icon">
-              <i className="fas fa-certificate"></i>
+              <i className="fas fa-award"></i>
             </div>
             <h3>Certifications</h3>
             <p>Our beans are certified organic, Fair Trade, and meet all international export regulations.</p>

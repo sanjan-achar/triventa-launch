@@ -22,7 +22,7 @@ const Nav = () => {
         <a href="#home" className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-md bg-primary flex items-center justify-center text-white font-semibold">TE</div>
           <div>
-            <h1 className="text-[#2B2B2B] font-semibold text-lg">Triventa Exports Pvt. Ltd.</h1>
+            <h1 className="text-[#2B2B2B] font-semibold text-lg brand-text">Triventa Exports Pvt. Ltd.</h1>
             <p className="text-sm text-gray-600">Karnataka, India</p>
           </div>
         </a>
@@ -129,9 +129,9 @@ const LandingPage = () => {
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#F4EDE6] to-transparent" />
 
           <div className="relative max-w-7xl mx-auto px-6">
-            <h3 className="text-2xl font-semibold text-white">About Triventa Exports</h3>
+            <h3 className="text-2xl font-semibold text-white">About <span className="brand-text">Triventa Exports</span></h3>
             <p className="mt-4 max-w-3xl text-white/90">
-              Triventa Exports Pvt. Ltd. is a structured coffee exporter based in Karnataka, India. We source directly from trusted farms,
+              <span className="brand-text">Triventa Exports Pvt. Ltd.</span> is a structured coffee exporter based in Karnataka, India. We source directly from trusted farms,
               apply rigorous quality control at origin, and provide reliable export services tailored for B2B international buyers.
             </p>
           </div>
@@ -222,14 +222,14 @@ const LandingPage = () => {
       <footer className="border-t border-gray-100 mt-12">
         <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-start gap-6">
           <div>
-            <h4 className="font-semibold">Triventa Exports Pvt. Ltd.</h4>
+            <h4 className="font-semibold brand-text">Triventa Exports Pvt. Ltd.</h4>
             <p className="mt-2 text-gray-600">Premium coffee exports — sourcing, grading and shipping from Karnataka, India.</p>
           </div>
 
           <div className="text-sm text-gray-600">
             <p>Info: info@triventaexports.com</p>
             <p className="mt-1">Phone: +91 91480 25018</p>
-            <p className="mt-1">© {new Date().getFullYear()} Triventa Exports Pvt. Ltd.</p>
+            <p className="mt-1">© {new Date().getFullYear()} <span className="brand-text">Triventa Exports Pvt. Ltd.</span></p>
           </div>
         </div>
       </footer>

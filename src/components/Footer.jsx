@@ -4,7 +4,7 @@ export default function Footer() {
       <div className="container">
         <div className="footer-content">
           <div className="footer-section">
-            <h4>Triventa Exports</h4>
+            <h4 className="brand-text">Triventa Exports</h4>
             <p>Your gateway to premium coffee from Karnataka.</p>
             <div className="social-links">
               <a href="#" title="Facebook"><i className="fab fa-facebook"></i></a>
@@ -36,11 +36,13 @@ export default function Footer() {
               <li><a href="#">Privacy Policy</a></li>
               <li><a href="#">Terms of Service</a></li>
               <li><a href="#">Cookie Policy</a></li>
+              <li>GSTIN: 29ABCDE1234F1Z5</li>
+              <li>CIN: U15490KA2024PTC123456</li>
             </ul>
           </div>
         </div>
         <div className="footer-bottom">
-          <p>&copy; 2026 Triventa Exports. All rights reserved. | Bringing Karnataka's Coffee to the World</p>
+          <p>&copy; 2026 <span className="brand-text">Triventa Exports</span>. All rights reserved. | Bringing Karnataka's Coffee to the World</p>
         </div>
       </div>
     </footer>

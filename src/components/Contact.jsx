@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -14,15 +14,88 @@ export default function Contact() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showPopup, setShowPopup] = useState(false)
+  const [showFormConfetti, setShowFormConfetti] = useState(false)
+  const [confettiOrigin, setConfettiOrigin] = useState({ x: 0, y: 0 })
+  const [confettiBurstId, setConfettiBurstId] = useState(0)
   const popupTimerRef = useRef(null)
+  const confettiTimerRef = useRef(null)
+  const statusTimerRef = useRef(null)
+  const submitButtonRef = useRef(null)
+  const formCardRef = useRef(null)
+
+  const confettiPieces = useMemo(() => {
+    const palette = ['#FFFFFF', '#F7D9C5', '#8C1D2F', '#6B1F2A', '#E8D4C0']
+
+    return Array.from({ length: 60 }, (_, index) => {
+      const horizontalSpread = (Math.random() - 0.5) * 300
+      const verticalSpread = (Math.random() - 0.45) * 320
+
+      return {
+        id: index,
+        x: horizontalSpread,
+        y: verticalSpread,
+        lift: 90 + Math.random() * 85,
+        size: 9 + Math.random() * 10,
+        rotate: Math.random() * 360,
+        duration: 1300 + Math.random() * 900,
+        delay: Math.random() * 160,
+        color: palette[Math.floor(Math.random() * palette.length)]
+      }
+    })
+  }, [])
 
   useEffect(() => {
     return () => {
       if (popupTimerRef.current) {
         window.clearTimeout(popupTimerRef.current)
       }
+      if (confettiTimerRef.current) {
+        window.clearTimeout(confettiTimerRef.current)
+      }
+      if (statusTimerRef.current) {
+        window.clearTimeout(statusTimerRef.current)
+      }
     }
   }, [])
+
+  const showTimedStatus = (status) => {
+    setSubmitStatus(status)
+
+    if (statusTimerRef.current) {
+      window.clearTimeout(statusTimerRef.current)
+    }
+
+    statusTimerRef.current = window.setTimeout(() => {
+      setSubmitStatus({ type: '', message: '' })
+    }, 5000)
+  }
+
+  const launchButtonConfetti = () => {
+    const button = submitButtonRef.current
+    const card = formCardRef.current
+
+    if (button && card) {
+      const cardRect = card.getBoundingClientRect()
+      const rect = button.getBoundingClientRect()
+      setConfettiOrigin({
+        x: rect.left - cardRect.left + rect.width / 2,
+        y: rect.top - cardRect.top + rect.height / 2
+      })
+    } else {
+      setConfettiOrigin({ x: 180, y: 280 })
+    }
+
+    setConfettiBurstId(prev => prev + 1)
+    setShowFormConfetti(true)
+
+    if (confettiTimerRef.current) {
+      window.clearTimeout(confettiTimerRef.current)
+    }
+
+    confettiTimerRef.current = window.setTimeout(() => {
+      setShowFormConfetti(false)
+    }, 2600)
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -44,7 +117,7 @@ export default function Contact() {
     }
 
     if (!cleanedData.name || !cleanedData.email || !cleanedData.phone || !cleanedData.company || !cleanedData.message) {
-      setSubmitStatus({
+      showTimedStatus({
         type: 'error',
         message: 'Please fill all fields before sending your message.'
       })
@@ -65,21 +138,22 @@ export default function Contact() {
       body: payload
     })
       .then(() => {
-        setSubmitStatus({
+        showTimedStatus({
           type: 'success',
           message: 'Thank you! Your message has been sent successfully.'
         })
+        launchButtonConfetti()
         setShowPopup(true)
         if (popupTimerRef.current) {
           window.clearTimeout(popupTimerRef.current)
         }
         popupTimerRef.current = window.setTimeout(() => {
           setShowPopup(false)
-        }, 3200)
+        }, 5000)
         setFormData({ name: '', email: '', phone: '', company: '', message: '' })
       })
       .catch(() => {
-        setSubmitStatus({
+        showTimedStatus({
           type: 'error',
           message: 'Submission failed. Please try again or email info@triventaexports.com.'
         })
@@ -131,9 +205,17 @@ export default function Contact() {
                 <p>Mon - Fri: 9:00 AM - 6:00 PM IST</p>
               </div>
             </div>
+            <div className="info-item">
+              <i className="fas fa-id-card"></i>
+              <div>
+                <h4>Business IDs</h4>
+                <p>GSTIN: 29ABCDE1234F1Z5</p>
+                <p>CIN: U15490KA2024PTC123456</p>
+              </div>
+            </div>
           </div>
           </div>
-          <div className="contact-card contact-form-card">
+          <div className="contact-card contact-form-card" ref={formCardRef}>
             <h3>Send us a Message</h3>
             <form
               className="contact-form"
@@ -187,7 +269,7 @@ export default function Contact() {
               onChange={handleChange}
               required
             ></textarea>
-            <button type="submit" className="btn btn-download" disabled={isSubmitting}>
+            <button ref={submitButtonRef} type="submit" className="btn btn-download" disabled={isSubmitting}>
               {isSubmitting ? 'Sending...' : 'Send Message'}
             </button>
             {submitStatus.message && (
@@ -196,6 +278,29 @@ export default function Contact() {
               </p>
             )}
             </form>
+
+            {showFormConfetti && (
+              <div className="form-confetti-overlay" aria-hidden="true" key={confettiBurstId}>
+                {confettiPieces.map(piece => (
+                  <span
+                    key={piece.id}
+                    className="form-confetti-piece"
+                    style={{
+                      '--burst-x': `${confettiOrigin.x}px`,
+                      '--burst-y': `${confettiOrigin.y}px`,
+                      '--piece-x': `${piece.x}px`,
+                      '--piece-y': `${piece.y}px`,
+                      '--piece-lift': `${piece.lift}px`,
+                      '--piece-size': `${piece.size}px`,
+                      '--piece-color': piece.color,
+                      '--piece-rotate': `${piece.rotate}deg`,
+                      '--piece-duration': `${piece.duration}ms`,
+                      '--piece-delay': `${piece.delay}ms`
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

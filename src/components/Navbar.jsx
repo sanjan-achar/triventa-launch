@@ -65,8 +65,9 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="container">
         <div className="nav-wrapper">
-          <div className="logo">
-            <span>Triventa Exports</span>
+          <div className="logo brand-text">
+            <img src="/logo.png" alt="Triventa Exports Logo" className="logo-image" />
+            <span className="logo-text">Triventa Exports</span>
           </div>
           <ul className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
             <li><a href="#home" className={activeSection === 'home' ? 'active' : ''} onClick={() => scrollToSection('home')}>Home</a></li>
