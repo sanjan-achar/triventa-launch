@@ -1575,29 +1575,92 @@ body.dark-mode .request-popup {
         display: none;
     }
 
+    .navbar {
+        backdrop-filter: blur(10px);
+    }
+
+    .navbar .container {
+        position: relative;
+    }
+
     .nav-menu {
         display: none;
         position: absolute;
         top: 100%;
-        left: 0;
-        right: 0;
+        left: 12px;
+        right: 12px;
         flex-direction: column;
-        gap: 0;
-        background-color: var(--surface-color);
-        padding: 20px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        gap: 8px;
+        background: linear-gradient(135deg, var(--surface-color) 0%, var(--bg-color) 100%);
+        padding: 12px;
+        border-radius: 16px;
+        border: 1px solid var(--muted-border);
+        box-shadow: 0 6px 20px rgba(107, 31, 42, 0.12);
+        margin-top: 10px;
+        z-index: 1200;
     }
 
     .nav-menu.active {
         display: flex;
+        animation: mobileMenuIn 0.25s ease;
+    }
+
+    .nav-menu li {
+        width: 100%;
+    }
+
+    .nav-menu a {
+        display: flex;
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    .nav-menu a::after {
+        display: none;
+    }
+
+    .nav-menu a:hover,
+    .nav-menu a.active {
+        background-color: rgba(140, 29, 47, 0.12);
+        color: var(--primary-color);
     }
 
     .hamburger {
         display: flex;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        border: 1px solid var(--muted-border);
+        background-color: rgba(255, 248, 240, 0.6);
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        gap: 4px;
     }
 
     .nav-controls {
         gap: 10px;
+    }
+
+    .hamburger span {
+        width: 20px;
+        margin: 0;
+    }
+
+    body.dark-mode .hamburger {
+        background-color: rgba(42, 30, 27, 0.75);
+    }
+
+    body.dark-mode .nav-menu {
+        background: linear-gradient(135deg, var(--surface-color) 0%, var(--bg-color) 100%);
+    }
+
+    body.dark-mode .nav-menu a:hover,
+    body.dark-mode .nav-menu a.active {
+        background-color: rgba(242, 230, 216, 0.12);
+        color: var(--white);
     }
 
     .hero h1 {
@@ -1768,6 +1831,17 @@ body.dark-mode .request-popup {
         width: 200px;
         height: 200px;
         font-size: 3rem;
+    }
+}
+
+@keyframes mobileMenuIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
