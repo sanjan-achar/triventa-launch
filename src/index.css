@@ -258,11 +258,6 @@ body.dark-mode .theme-toggle:hover {
     flex-shrink: 0;
 }
 
-body:not(.dark-mode) .logo-image {
-    width: 50px;
-    height: 50px;
-}
-
 .logo-text {
     font-size: 1.5rem;
     font-family: inherit;
