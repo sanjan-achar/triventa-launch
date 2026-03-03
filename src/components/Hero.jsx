@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-const countdownTarget = new Date(2026, 2, 6, 7, 30, 0)
+const countdownTarget = new Date(2026, 2, 6, 7, 38, 0)
+const launchShownStorageKey = `hero-launch-shown-${countdownTarget.getTime()}`
 
 const getTimeLeft = () => {
   const difference = countdownTarget.getTime() - Date.now()
@@ -21,9 +22,13 @@ const getTimeLeft = () => {
 export default function Hero() {
   const [timeLeft, setTimeLeft] = useState(getTimeLeft)
   const [showConfetti, setShowConfetti] = useState(false)
+  const [showLiveNow, setShowLiveNow] = useState(false)
   const [confettiBurstId, setConfettiBurstId] = useState(0)
-  const hasTriggeredConfetti = useRef(false)
+
+  const hasTriggeredLaunch = useRef(false)
   const confettiTimerRef = useRef(null)
+  const liveNowTimerRef = useRef(null)
+  const launchTimerRef = useRef(null)
 
   const confettiPieces = useMemo(() => {
     const palette = ['#FF4D6D', '#FFD93D', '#6EEB83', '#00C2FF', '#9B5DE5', '#F15BB5', '#FF8C42', '#2EC4B6', '#FFFFFF']
@@ -39,18 +44,20 @@ export default function Hero() {
     }))
   }, [confettiBurstId])
 
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setTimeLeft(getTimeLeft())
-    }, 1000)
-
-    return () => {
-      window.clearInterval(timer)
-      if (confettiTimerRef.current) {
-        window.clearTimeout(confettiTimerRef.current)
-      }
+  const hasShownLaunchSequence = () => {
+    try {
+      return window.localStorage.getItem(launchShownStorageKey) === '1'
+    } catch {
+      return false
     }
-  }, [])
+  }
+
+  const markLaunchSequenceShown = () => {
+    try {
+      window.localStorage.setItem(launchShownStorageKey, '1')
+    } catch {
+    }
+  }
 
   const triggerConfetti = () => {
     setConfettiBurstId((prev) => prev + 1)
@@ -65,12 +72,89 @@ export default function Hero() {
     }, 5200)
   }
 
-  useEffect(() => {
-    if (timeLeft.totalMs === 0 && !hasTriggeredConfetti.current) {
-      hasTriggeredConfetti.current = true
-      triggerConfetti()
+  const startLiveSequence = () => {
+    triggerConfetti()
+    setShowLiveNow(true)
+    markLaunchSequenceShown()
+
+    if (liveNowTimerRef.current) {
+      window.clearTimeout(liveNowTimerRef.current)
     }
-  }, [timeLeft.totalMs])
+
+    liveNowTimerRef.current = window.setTimeout(() => {
+      setShowLiveNow(false)
+    }, 10000)
+  }
+
+  useEffect(() => {
+    if (Date.now() < countdownTarget.getTime()) {
+      hasTriggeredLaunch.current = false
+      setShowLiveNow(false)
+      setShowConfetti(false)
+    }
+  }, [])
+
+  const triggerLaunchIfNeeded = () => {
+    if (hasTriggeredLaunch.current) {
+      return
+    }
+
+    if (hasShownLaunchSequence()) {
+      hasTriggeredLaunch.current = true
+      setTimeLeft(getTimeLeft())
+      return
+    }
+
+    if (Date.now() >= countdownTarget.getTime()) {
+      hasTriggeredLaunch.current = true
+      startLiveSequence()
+      setTimeLeft(getTimeLeft())
+    }
+  }
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      const nextTimeLeft = getTimeLeft()
+      setTimeLeft(nextTimeLeft)
+
+      if (nextTimeLeft.totalMs === 0) {
+        triggerLaunchIfNeeded()
+      }
+    }, 1000)
+
+    return () => {
+      window.clearInterval(timer)
+      if (confettiTimerRef.current) {
+        window.clearTimeout(confettiTimerRef.current)
+      }
+      if (liveNowTimerRef.current) {
+        window.clearTimeout(liveNowTimerRef.current)
+      }
+      if (launchTimerRef.current) {
+        window.clearTimeout(launchTimerRef.current)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    triggerLaunchIfNeeded()
+
+    if (hasTriggeredLaunch.current) {
+      return
+    }
+
+    const msUntilLaunch = countdownTarget.getTime() - Date.now()
+
+    launchTimerRef.current = window.setTimeout(() => {
+      triggerLaunchIfNeeded()
+    }, Math.max(msUntilLaunch, 0))
+
+    return () => {
+      if (launchTimerRef.current) {
+        window.clearTimeout(launchTimerRef.current)
+      }
+    }
+  }, [])
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id)
@@ -105,21 +189,21 @@ export default function Hero() {
         <p className="tagline">Your Gateway to Global Market</p>
         <p className="hero-subtitle">Premium Coffee Beans Sourced Directly from Karnataka's Finest Farmers</p>
 
-        <div
-          className="event-timer"
-          role="button"
-          tabIndex={0}
-          aria-label="Going live countdown. Click to test confetti"
-          onClick={triggerConfetti}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-              event.preventDefault()
-              triggerConfetti()
-            }
-          }}
-        >
-          <p className="timer-label">Going live in</p>
-          {timeLeft.totalMs > 0 ? (
+        {timeLeft.totalMs > 0 ? (
+          <div
+            className="event-timer"
+            role="button"
+            tabIndex={0}
+            aria-label="Going live countdown. Click to test confetti"
+            onClick={triggerConfetti}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault()
+                triggerConfetti()
+              }
+            }}
+          >
+            <p className="timer-label">Going live in</p>
             <div className="timer-grid">
               <div className="timer-cell">
                 <span className="timer-value">{String(timeLeft.days).padStart(2, '0')}</span>
@@ -138,10 +222,10 @@ export default function Hero() {
                 <span className="timer-unit">Sec</span>
               </div>
             </div>
-          ) : (
-            <p className="timer-ended">Countdown completed 🎉</p>
-          )}
-        </div>
+          </div>
+        ) : showLiveNow ? (
+          <p className="timer-ended timer-ended-dramatic">Live now</p>
+        ) : null}
 
         <div className="cta-buttons">
           <button className="btn btn-primary" onClick={() => scrollToSection('contact')}>

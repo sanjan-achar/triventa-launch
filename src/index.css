@@ -515,6 +515,38 @@ body:not(.dark-mode) .hero-subtitle {
     font-weight: 600;
 }
 
+.timer-ended-dramatic {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 10px;
+    font-size: clamp(1.2rem, 3.2vw, 2rem);
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    animation: live-now-dramatic-in 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes live-now-dramatic-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.4) translateY(24px) rotate(-6deg);
+        filter: blur(6px);
+    }
+    55% {
+        opacity: 1;
+        transform: scale(1.12) translateY(-6px) rotate(2deg);
+        filter: blur(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0) rotate(0deg);
+        filter: blur(0);
+    }
+}
+
 .confetti-layer {
     position: fixed;
     inset: 0;
