@@ -66,7 +66,15 @@ export default function Navbar() {
       <div className="container">
         <div className="nav-wrapper">
           <div className="logo brand-text">
-            <img src="/logo.png" alt="Triventa Exports Logo" className="logo-image" />
+            <img
+              src={isDarkMode ? '/logo-dark.png' : '/logo.png'}
+              alt="Triventa Exports Logo"
+              className="logo-image"
+              onError={(event) => {
+                event.currentTarget.onerror = null
+                event.currentTarget.src = '/logo.png'
+              }}
+            />
             <span className="logo-text">Triventa Exports</span>
           </div>
           <ul className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
