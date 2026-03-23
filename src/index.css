@@ -659,33 +659,28 @@ body:not(.dark-mode) .about-full .about-text p {
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.about-stat-card h3 {
-    font-size: 2rem;
+.about-stat-card p,
+.about-stat-label {
     color: #8C1D2F;
+    font-weight: 700;
     margin: 0;
-    line-height: 1.1;
+    line-height: 1.35;
+    font-size: 1.35rem;
+    max-width: 12ch;
 }
 
-.about-stat-card p {
-    color: #8C1D2F;
-    font-weight: 600;
-    margin: 0;
-    line-height: 1.3;
-    font-size: 0.9rem;
-}
-
-.about-full .about-stat-card h3,
-.about-full .about-stat-card p {
+.about-full .about-stat-card p,
+.about-full .about-stat-label {
     color: #8C1D2F;
 }
 
-body:not(.dark-mode) .about-full .about-text .about-stat-card h3,
-body:not(.dark-mode) .about-full .about-text .about-stat-card p {
+body:not(.dark-mode) .about-full .about-text .about-stat-card p,
+body:not(.dark-mode) .about-full .about-text .about-stat-label {
     color: #8C1D2F;
 }
 
-.about-full .about-text .about-stat-card h3,
-.about-full .about-text .about-stat-card p {
+.about-full .about-text .about-stat-card p,
+.about-full .about-text .about-stat-label {
     text-align: center;
     width: 100%;
 }
@@ -695,8 +690,8 @@ body.dark-mode .about-stat-card {
     border-color: rgba(184, 170, 160, 0.3);
 }
 
-body.dark-mode .about-stat-card h3,
-body.dark-mode .about-stat-card p {
+body.dark-mode .about-stat-card p,
+body.dark-mode .about-stat-label {
     color: #8C1D2F;
 }
 
@@ -1607,18 +1602,12 @@ body.dark-mode .request-popup {
         border-radius: 12px;
     }
 
-    .about-stat-card h3 {
+    .about-stat-card p,
+    .about-stat-label {
         color: #8C1D2F;
-        font-size: clamp(1rem, 4vw, 1.25rem);
-        margin: 0;
-        line-height: 1.1;
-    }
-
-    .about-stat-card p {
-        color: #8C1D2F;
-        font-weight: 600;
-        font-size: clamp(0.56rem, 2.3vw, 0.72rem);
-        line-height: 1.15;
+        font-weight: 700;
+        font-size: clamp(0.82rem, 2.7vw, 1rem);
+        line-height: 1.2;
         letter-spacing: 0.01em;
         max-width: 92%;
         margin: 0 auto;
@@ -1628,11 +1617,8 @@ body.dark-mode .request-popup {
         background: rgba(62, 50, 47, 0.88);
     }
 
-    body.dark-mode .about-stat-card h3 {
-        color: #F2E6D8;
-    }
-
-    body.dark-mode .about-stat-card p {
+    body.dark-mode .about-stat-card p,
+    body.dark-mode .about-stat-label {
         color: #F2E6D8;
     }
 
@@ -1747,8 +1733,9 @@ body.dark-mode .request-popup {
         font-size: 0.95rem;
     }
 
-    .about-stat-card p {
-        font-size: clamp(0.54rem, 2.8vw, 0.68rem);
+    .about-stat-card p,
+    .about-stat-label {
+        font-size: clamp(0.74rem, 3.2vw, 0.9rem);
         line-height: 1.1;
     }
 
